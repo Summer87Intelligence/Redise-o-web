@@ -55,7 +55,7 @@ type Props = {
       riskLabel: string
       actionLabel: string
       inputCompanySize: string
-      inputMonthlyRevenue: string
+      inputRevenueRange: string
       linkHome: string
       linkDemo: string
       linkPricing: string
@@ -70,7 +70,7 @@ export default function IntentPageTemplate({ locale, slug, page, related }: Prop
   const coreLinks = [
     { href: `/${locale}`, label: page.ui.linkHome },
     { href: `/${locale}/demo`, label: page.ui.linkDemo },
-    { href: `/${locale}/pricing`, label: page.ui.linkPricing },
+    { href: `/${locale}/servicios`, label: page.ui.linkPricing },
     { href: `/${locale}/faq`, label: page.ui.linkFaq },
     { href: `/${locale}/como-funciona`, label: page.ui.linkHowItWorks },
   ]
@@ -218,7 +218,7 @@ export default function IntentPageTemplate({ locale, slug, page, related }: Prop
             />
             <input
               type="text"
-              placeholder={page.ui.inputMonthlyRevenue}
+              placeholder={page.ui.inputRevenueRange}
               className="bg-[#0D1117] border border-[#30363D] rounded-lg px-3 py-2.5 text-sm text-[#F0F6FC] placeholder-[#484F58] outline-none"
             />
           </div>

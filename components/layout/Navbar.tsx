@@ -1,23 +1,143 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
-import { usePathname } from 'next/navigation'
-import { LanguageSwitcher, useTranslation } from '@/lib/i18n/config'
+import Image from 'next/image'
+import { useState, useEffect, useMemo, useRef } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useTranslation } from '@/lib/i18n/config'
+import { isLocale, type Locale } from '@/lib/i18n/shared'
+import { trackEvent } from '@/lib/analytics'
+
+/** Home section order (top → bottom) for scroll spy */
+const SECTION_IDS = [
+  'inicio',
+  'problema',
+  'servicios',
+  'como-funciona',
+  'origen',
+  'casos-de-uso',
+  'faq',
+] as const
+
+const LANGUAGE_OPTIONS: Record<Locale, { code: string; label: string }> = {
+  es: { code: 'ES', label: 'Español' },
+  en: { code: 'EN', label: 'English' },
+  de: { code: 'DE', label: 'Deutsch' },
+}
+
+function LanguageDropdown({
+  locale,
+  onSelect,
+  className = '',
+}: {
+  locale: Locale
+  onSelect: (targetLocale: Locale) => void
+  className?: string
+}) {
+  const [open, setOpen] = useState(false)
+  const rootRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!rootRef.current) return
+      if (!rootRef.current.contains(event.target as Node)) setOpen(false)
+    }
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleEscape)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [])
+
+  return (
+    <div ref={rootRef} className={`relative inline-block ${className}`.trim()}>
+      <button
+        type="button"
+        onClick={() => setOpen((current) => !current)}
+        className="w-full rounded-lg border border-[#30363D] bg-[#161B22] px-3 py-2 text-sm text-white/80 transition-colors hover:text-white hover:border-[#2F81F7]/40"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label="Language selector"
+      >
+        {`${LANGUAGE_OPTIONS[locale].code} | ${LANGUAGE_OPTIONS[locale].label}`}
+      </button>
+      {open && (
+        <div
+          role="listbox"
+          aria-label="Language options"
+          className="absolute right-0 mt-2 min-w-[150px] overflow-hidden rounded-lg border border-[#30363D] bg-[#161B22] shadow-xl z-50"
+        >
+          {(Object.keys(LANGUAGE_OPTIONS) as Locale[]).map((item) => (
+            <button
+              key={item}
+              type="button"
+              role="option"
+              aria-selected={locale === item}
+              onClick={() => {
+                onSelect(item)
+                setOpen(false)
+              }}
+              className={`block w-full cursor-pointer px-3 py-2 text-left text-sm transition-colors ${
+                locale === item
+                  ? 'bg-[#2F81F7]/15 text-[#58A6FF]'
+                  : 'text-white/75 hover:bg-[#21262D] hover:text-white'
+              }`}
+            >
+              {`${LANGUAGE_OPTIONS[item].code} | ${LANGUAGE_OPTIONS[item].label}`}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default function Navbar() {
   const { t, locale } = useTranslation()
+  const router = useRouter()
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState<string>('servicios')
-  const navLinks = [
-    { id: 'servicios', label: t.navbarExtra.servicesLabel, href: `/${locale}#servicios` },
-    { id: 'como-funciona', label: t.navbar.links.comoFunciona, href: `/${locale}#como-funciona` },
-    { id: 'casos-de-uso', label: t.navbar.links.casos, href: `/${locale}#casos-de-uso` },
-    { id: 'pricing', label: t.navbar.links.pricing, href: `/${locale}#pricing` },
-    { id: 'faq', label: t.navbar.links.faq, href: `/${locale}#faq` },
-  ]
+  const [activeSection, setActiveSection] = useState<string>('')
+
+  const isHome = useMemo(
+    () => Boolean(pathname && (pathname === `/${locale}` || pathname === `/${locale}/`)),
+    [pathname, locale]
+  )
+
+  const navLinks = useMemo(
+    () => [
+      { id: 'inicio' as const, label: t.navbar.home, href: `/${locale}#inicio` },
+      { id: 'problema' as const, label: t.navbar.links.problem, href: `/${locale}#problema` },
+      { id: 'servicios' as const, label: t.navbar.links.services, href: `/${locale}#servicios` },
+      { id: 'como-funciona' as const, label: t.navbar.links.howItWorks, href: `/${locale}#como-funciona` },
+      { id: 'origen' as const, label: t.navbar.links.origin, href: `/${locale}#origen` },
+      { id: 'casos-de-uso' as const, label: t.navbar.links.useCases, href: `/${locale}#casos-de-uso` },
+      { id: 'faq' as const, label: t.navbar.links.faq, href: `/${locale}#faq` },
+    ],
+    [t, locale]
+  )
+
+  const switchLocale = (targetLocale: Locale) => {
+    if (targetLocale === locale) return
+    trackEvent('change_language', { from: locale, to: targetLocale })
+    if (!pathname) return
+    const segments = pathname.split('/').filter(Boolean)
+    if (segments.length === 0) {
+      router.replace(`/${targetLocale}`)
+      return
+    }
+    if (isLocale(segments[0])) {
+      segments[0] = targetLocale
+      router.replace(`/${segments.join('/')}`)
+      return
+    }
+    router.replace(`/${targetLocale}/${segments.join('/')}`)
+  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -26,67 +146,85 @@ export default function Navbar() {
   }, [])
 
   useEffect(() => {
-    const sectionIds = navLinks.map((link) => link.id)
-    const sections = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter((section): section is HTMLElement => Boolean(section))
+    if (!isHome) {
+      setActiveSection('')
+      return
+    }
 
-    if (!sections.length) return
+    const offset = 120
+    const activationLine = offset + 80
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
-        if (visible[0]?.target?.id) {
-          setActiveSection(visible[0].target.id)
-        }
-      },
-      {
-        root: null,
-        rootMargin: '-96px 0px -55% 0px',
-        threshold: [0.1, 0.25, 0.4, 0.6],
+    const updateActive = () => {
+      const sections = (
+        SECTION_IDS.map((id) => {
+          const el = document.getElementById(id)
+          if (!el) return null
+          return { id, top: el.getBoundingClientRect().top }
+        }).filter(Boolean) as Array<{ id: (typeof SECTION_IDS)[number]; top: number }>
+      ).sort((a, b) => a.top - b.top)
+
+      if (sections.length === 0) {
+        setActiveSection('inicio')
+        return
       }
-    )
 
-    sections.forEach((section) => observer.observe(section))
-    return () => observer.disconnect()
-  }, [pathname, locale])
+      const active = sections
+        .filter((section) => section.top <= activationLine)
+        .at(-1)?.id ?? 'inicio'
+
+      setActiveSection(active)
+    }
+
+    updateActive()
+    requestAnimationFrame(updateActive)
+    const hydrationTimer = window.setTimeout(updateActive, 0)
+    window.addEventListener('scroll', updateActive, { passive: true })
+    window.addEventListener('resize', updateActive, { passive: true })
+    return () => {
+      window.clearTimeout(hydrationTimer)
+      window.removeEventListener('scroll', updateActive)
+      window.removeEventListener('resize', updateActive)
+    }
+  }, [isHome, pathname, locale])
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-[#0D1117]/90 backdrop-blur-md border-b border-[#30363D]/80'
-          : 'bg-transparent'
+          ? 'bg-[#0D1117]/80 backdrop-blur border-b border-white/10'
+          : 'bg-[#0D1117]/55 backdrop-blur border-b border-white/5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className={`flex items-center justify-between transition-all duration-200 ${scrolled ? 'h-14' : 'h-16'}`}>
           {/* Logo */}
-          <Link href={`/${locale}`} className="flex items-center gap-2.5 group" aria-label={t.navbar.aria.home}>
-            <div className="w-8 h-8 rounded-lg bg-[#2F81F7] flex items-center justify-center shadow-[0_0_12px_rgba(47,129,247,0.4)] group-hover:shadow-[0_0_20px_rgba(47,129,247,0.5)] transition-shadow">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path
-                  d="M8 2L10.5 6.5H13.5L11 9.5L12 13.5L8 11L4 13.5L5 9.5L2.5 6.5H5.5L8 2Z"
-                  fill="white"
-                  fillOpacity="0.95"
-                />
-              </svg>
+          <Link href={`/${locale}#inicio`} className="flex items-center gap-3 group" aria-label={t.navbar.aria.home}>
+            <div className="p-1 rounded-lg bg-white/[0.03] border border-white/10">
+              <Image
+                src="/summer87-logo.png"
+                alt="Summer87"
+                width={34}
+                height={34}
+                priority
+                className="h-9 w-9 sm:h-10 sm:w-10 rounded-md object-cover"
+              />
             </div>
-            <span className="font-bold text-[#F0F6FC] text-lg tracking-tight">Summer87</span>
+            <span className="font-semibold text-white text-lg tracking-tight">Summer87</span>
           </Link>
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1" aria-label={t.navbar.aria.nav}>
             {navLinks.map((link) => (
               <Link
-                key={link.href}
+                key={link.id}
                 href={link.href}
-                className={`px-3 py-1.5 text-sm rounded-lg transition-all duration-150 border ${
+                onClick={() => {
+                  if (link.id === 'servicios') trackEvent('view_servicios', { from: 'navbar' })
+                }}
+                className={`px-3.5 py-2 text-sm rounded-md transition-all duration-200 border ${
                   activeSection === link.id
-                    ? 'text-[#2F81F7] bg-[#2F81F7]/10 border-[#2F81F7]/20'
-                    : 'text-[#8B949E] hover:text-[#F0F6FC] border-transparent hover:bg-[#161B22]'
+                    ? 'text-[#2F81F7] bg-[#2F81F7]/12 border-[#2F81F7]/25'
+                    : 'text-white/70 hover:text-white border-transparent hover:bg-white/5'
                 }`}
               >
                 {link.label}
@@ -95,10 +233,10 @@ export default function Navbar() {
           </nav>
 
           {/* Actions */}
-          <div className="flex items-center gap-3">
-            <LanguageSwitcher className="hidden md:block" />
+          <div className="flex items-center gap-4">
+            <LanguageDropdown locale={locale} onSelect={switchLocale} className="hidden md:block" />
             <Link
-              href={`/${locale}#demo`}
+              href={`/${locale}/demo`}
               className="hidden sm:inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-[#2F81F7] hover:bg-[#388BFD] rounded-lg transition-colors duration-150 shadow-glow-sm hover:shadow-glow focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2F81F7]"
             >
               {t.navbar.cta}
@@ -106,8 +244,6 @@ export default function Navbar() {
                 <path d="M3 8h10M9 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </Link>
-
-            {/* Hamburger */}
             <button
               type="button"
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -135,9 +271,12 @@ export default function Navbar() {
           <nav className="px-4 py-4 space-y-1" aria-label={t.navbar.aria.mobileMenu}>
             {navLinks.map((link) => (
               <Link
-                key={link.href}
+                key={link.id}
                 href={link.href}
-                onClick={() => setMobileOpen(false)}
+                onClick={() => {
+                  if (link.id === 'servicios') trackEvent('view_servicios', { from: 'navbar' })
+                  setMobileOpen(false)
+                }}
                 className={`block px-3 py-2.5 rounded-lg text-sm font-medium border transition-colors ${
                   activeSection === link.id
                     ? 'text-[#2F81F7] bg-[#2F81F7]/10 border-[#2F81F7]/20'
@@ -148,14 +287,21 @@ export default function Navbar() {
               </Link>
             ))}
             <Link
-              href={`/${locale}#demo`}
+              href={`/${locale}/demo`}
               onClick={() => setMobileOpen(false)}
               className="block mt-2 px-3 py-3 text-center text-sm font-semibold text-white bg-[#2F81F7] hover:bg-[#388BFD] rounded-lg transition-colors"
             >
               {t.navbar.cta}
             </Link>
             <div className="pt-2">
-              <LanguageSwitcher className="w-full" />
+              <LanguageDropdown
+                locale={locale}
+                onSelect={(targetLocale) => {
+                  switchLocale(targetLocale)
+                  setMobileOpen(false)
+                }}
+                className="w-full"
+              />
             </div>
           </nav>
         </div>

@@ -1,16 +1,24 @@
 'use client'
 import { useTranslation } from '@/lib/i18n/config'
+import { motion, useReducedMotion } from 'framer-motion'
 
 export default function UseCases() {
   const { t } = useTranslation()
   const cases = t.useCases.cases
+  const reduceMotion = useReducedMotion()
   return (
-    <section id="casos-de-uso" className="scroll-mt-24 py-24 bg-[#0D1117] relative">
+    <section id="casos-de-uso" className="scroll-mt-24 py-16 bg-[#0D1117] relative">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(124,58,237,0.05),transparent_60%)] pointer-events-none" aria-hidden />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
+        <motion.div
+          className="text-center mb-10"
+          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : 0.08 }}
+        >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#2F81F7]/25 bg-[#2F81F7]/8 mb-6">
             <div className="w-1 h-1 rounded-full bg-[#2F81F7]" />
             <span className="text-[#2F81F7] text-xs font-semibold uppercase tracking-widest">
@@ -19,21 +27,37 @@ export default function UseCases() {
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#F0F6FC] leading-tight tracking-tight mb-4 text-balance">
             {t.useCases.title}{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2F81F7] to-[#60A5FA]">
+            <motion.span
+              initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : 0.18 }}
+              className="text-[#2F81F7]"
+            >
               {t.useCases.titleHighlight}
-            </span>
+            </motion.span>
           </h2>
-          <p className="text-lg text-[#8B949E] max-w-xl mx-auto leading-relaxed">
+          <p className="text-base text-[#8B949E] max-w-xl mx-auto leading-relaxed line-clamp-2">
             {t.useCases.description}
           </p>
-        </div>
+        </motion.div>
 
         {/* Cases grid */}
-        <div className="grid md:grid-cols-2 gap-6">
-          {cases.map((c, i) => (
-            <div
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.12 }}
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: reduceMotion ? 0 : 0.08 } } }}
+        >
+          {cases.slice(0, 3).map((c, i) => (
+            <motion.div
               key={i}
-              className="group p-6 rounded-2xl border border-[#30363D] bg-[#161B22] hover:bg-[#1A1F26] hover:border-[#484F58] transition-all duration-200"
+              variants={{
+                hidden: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 },
+                visible: { opacity: 1, y: 0, transition: { duration: reduceMotion ? 0 : 0.5, ease: 'easeOut' } },
+              }}
+              className="group h-full p-6 rounded-2xl border border-[#30363D] bg-[#161B22] hover:bg-[#1A1F26] hover:border-[#2F81F7]/40 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_0_0_1px_rgba(47,129,247,0.30),0_20px_60px_rgba(47,129,247,0.12)] flex flex-col"
             >
               {/* Industry header */}
               <div className="flex items-center gap-3 mb-5">
@@ -54,7 +78,7 @@ export default function UseCases() {
               </div>
 
               {/* Problem → Solution */}
-              <div className="mb-5 space-y-3">
+              <div className="mb-4 space-y-2.5">
                 <div className="flex items-start gap-2.5 p-3 rounded-lg border border-[#F85149]/15 bg-[#F85149]/5">
                   <svg className="w-4 h-4 text-[#F85149] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" aria-hidden>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9.303 3.376c.866 1.5-.217 3.374-1.948 3.374H4.645c-1.73 0-2.813-1.874-1.948-3.374l7.578-13.48c.866-1.5 3.032-1.5 3.898 0l7.578 13.48z" />
@@ -82,7 +106,7 @@ export default function UseCases() {
                   {t.useCases.metricsLabel}
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {c.metrics.map((m, j) => (
+                  {c.metrics.slice(0, 2).map((m, j) => (
                     <span
                       key={j}
                       className="px-2.5 py-1 rounded-lg text-xs font-medium text-[#8B949E] border border-[#30363D] bg-[#21262D]"
@@ -95,7 +119,7 @@ export default function UseCases() {
 
               {/* Result */}
               <div
-                className="p-3 rounded-xl border-l-[3px]"
+                className="mt-auto p-3 rounded-xl border-l-[3px]"
                 style={{ borderLeftColor: c.color, backgroundColor: `${c.color}08` }}
               >
                 <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: c.color }}>
@@ -103,9 +127,9 @@ export default function UseCases() {
                 </p>
                 <p className="text-[#F0F6FC] text-sm leading-relaxed">{c.result}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   )

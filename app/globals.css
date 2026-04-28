@@ -20,6 +20,60 @@
     background-color: #0d1117;
     color: #f0f6fc;
     min-height: 100vh;
+    /*
+     * isolation: isolate creates a stacking context on body.
+     * This makes body::before { z-index: -1 } paint above body's background
+     * but below all body content — without affecting position:fixed descendants,
+     * which still position relative to the viewport.
+     */
+    isolation: isolate;
+  }
+
+  /*
+   * Global background depth system — fixed layer, pure CSS, no JS, no images.
+   * Layers (top to bottom): grid lines → radial glows → body background color.
+   */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      /* Subtle grid — horizontal */
+      linear-gradient(rgba(240, 246, 252, 0.035) 1px, transparent 1px),
+      /* Subtle grid — vertical */
+      linear-gradient(90deg, rgba(240, 246, 252, 0.035) 1px, transparent 1px),
+      /* Top center: blue depth anchor */
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(47, 129, 247, 0.06), transparent 70%),
+      /* Mid right: purple accent */
+      radial-gradient(ellipse 55% 50% at 92% 45%, rgba(124, 58, 237, 0.05), transparent 70%),
+      /* Bottom left: green warmth */
+      radial-gradient(ellipse 55% 55% at 8% 88%, rgba(63, 185, 80, 0.04), transparent 70%);
+    background-size:
+      48px 48px,
+      48px 48px,
+      100% 100%,
+      100% 100%,
+      100% 100%;
+    background-repeat:
+      repeat,
+      repeat,
+      no-repeat,
+      no-repeat,
+      no-repeat;
+  }
+
+  /* Mobile: remove grid, reduce radial opacity ~50% */
+  @media (max-width: 768px) {
+    body::before {
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(47, 129, 247, 0.03), transparent 70%),
+        radial-gradient(ellipse 55% 50% at 92% 45%, rgba(124, 58, 237, 0.025), transparent 70%),
+        radial-gradient(ellipse 55% 55% at 8% 88%, rgba(63, 185, 80, 0.02), transparent 70%);
+      background-size: 100% 100%, 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat, no-repeat;
+    }
   }
 
   ::selection {
@@ -49,9 +103,69 @@
   }
 }
 
+@keyframes slowPulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroChipIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slow-pulse {
+  animation: slowPulse 8s ease-in-out infinite;
+}
+
+.hero-entrance {
+  animation: heroFadeUp 0.65s ease-out 0.05s both;
+}
+
+.hero-chip-entrance {
+  animation: heroChipIn 0.5s ease-out both;
+  animation-delay: var(--chip-delay, 0ms);
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-slow-pulse,
+    .hero-entrance,
+    .hero-chip-entrance {
+      animation: none;
+    }
+    .hero-entrance,
+    .hero-chip-entrance {
+      opacity: 1;
+      transform: none;
+    }
   }
 
   .gradient-text {
@@ -78,5 +192,21 @@
   }
   .animate-delay-500 {
     animation-delay: 500ms;
+  }
+}
+
+@keyframes ctaGlow {
+  0%, 100% { box-shadow: 0 0 24px rgba(47, 129, 247, 0.28); }
+  50%       { box-shadow: 0 0 48px rgba(47, 129, 247, 0.52); }
+}
+
+.cta-glow-pulse {
+  animation: ctaGlow 2.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-glow-pulse {
+    animation: none;
+    box-shadow: 0 0 24px rgba(47, 129, 247, 0.28);
   }
 }

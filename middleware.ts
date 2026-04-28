@@ -21,6 +21,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  /** Allow all localized routes: /es, /en, /de and their children (no redirect). */
   const pathnameHasLocale = LOCALES.some(
     (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)
   )

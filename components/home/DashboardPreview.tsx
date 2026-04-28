@@ -310,7 +310,7 @@ export default function DashboardPreview() {
             {' '}{t.dashboard.footerDescription}
           </p>
           <a
-            href="#demo"
+            href="#contacto"
             className="flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-[#2F81F7] hover:bg-[#388BFD] rounded-xl transition-colors shadow-glow-sm"
           >
             {t.dashboard.footerButton}

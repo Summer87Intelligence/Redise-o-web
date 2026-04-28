@@ -111,20 +111,23 @@ export default function DemoPage() {
   const roles = t.demo.roles
   const sizes = t.demo.sizes
   const industries = t.demo.industries
-  const revenues = t.demo.revenues
+  const services = t.demo.services
   const problems = t.demo.problems
   const urgencies = t.demo.urgencies
+
   const [step, setStep] = useState<Step>(1)
   const [submitted, setSubmitted] = useState(false)
 
   const [role, setRole] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [whatsapp, setWhatsapp] = useState('')
   const [size, setSize] = useState('')
   const [industry, setIndustry] = useState('')
-  const [revenue, setRevenue] = useState('')
+  const [service, setService] = useState('')
   const [selectedProblems, setSelectedProblems] = useState<string[]>([])
   const [urgency, setUrgency] = useState('')
+  const [comment, setComment] = useState('')
 
   function handleSubmit() {
     setSubmitted(true)
@@ -139,26 +142,29 @@ export default function DemoPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
           </div>
-          <h1 className="text-2xl font-black text-[#F0F6FC] mb-3">{t.demo.successTitle}</h1>
-          <p className="text-[#8B949E] mb-8 leading-relaxed">
-            {t.demo.successDescriptionPrefix} <strong className="text-[#F0F6FC]">{email}</strong> {t.demo.successDescriptionSuffix}
-          </p>
-          <div className="p-4 rounded-xl border border-[#30363D] bg-[#161B22] text-left mb-6">
-            <p className="text-[#484F58] text-xs uppercase tracking-wider font-medium mb-3">
+          <h1 className="text-2xl font-black text-[#F0F6FC] mb-4">{t.demo.successTitle}</h1>
+          <p className="text-[#8B949E] mb-8 leading-relaxed">{t.demo.successDescription}</p>
+          <div className="p-5 rounded-2xl border border-[#30363D] bg-[#161B22] text-left mb-8">
+            <p className="text-[#484F58] text-xs uppercase tracking-wider font-medium mb-4">
               {t.demo.successListTitle}
             </p>
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               {t.demo.successList.map((item, i) => (
-                <li key={i} className="flex items-start gap-2 text-[#8B949E] text-sm">
-                  <svg className="w-4 h-4 text-[#3FB950] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
+                <li key={i} className="flex items-start gap-2.5 text-[#8B949E] text-sm">
+                  <div className="w-5 h-5 rounded-full bg-[#2F81F7]/10 border border-[#2F81F7]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#2F81F7" strokeWidth="2">
+                      <path d="M2 5l2.5 2.5L8 3" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
                   {item}
                 </li>
               ))}
             </ul>
           </div>
-          <Link href={`/${locale}`} className="text-[#2F81F7] hover:underline text-sm">
+          <Link
+            href={`/${locale}`}
+            className="inline-flex items-center gap-2 text-[#2F81F7] hover:underline text-sm"
+          >
             ← {t.demo.backHome}
           </Link>
         </div>
@@ -242,6 +248,19 @@ export default function DemoPage() {
                     className="w-full bg-[#21262D] border border-[#30363D] rounded-xl px-4 py-3 text-[#F0F6FC] placeholder-[#484F58] focus:outline-none focus:border-[#2F81F7] transition-colors text-sm"
                   />
                 </div>
+                <div>
+                  <label htmlFor="whatsapp" className="block text-[#8B949E] text-sm font-medium mb-2">
+                    {t.demo.step1.whatsappLabel}
+                  </label>
+                  <input
+                    id="whatsapp"
+                    type="tel"
+                    value={whatsapp}
+                    onChange={(e) => setWhatsapp(e.target.value)}
+                    placeholder={t.demo.step1.whatsappPlaceholder}
+                    className="w-full bg-[#21262D] border border-[#30363D] rounded-xl px-4 py-3 text-[#F0F6FC] placeholder-[#484F58] focus:outline-none focus:border-[#2F81F7] transition-colors text-sm"
+                  />
+                </div>
                 <button
                   onClick={() => setStep(2)}
                   disabled={!role || !name || !email}
@@ -261,7 +280,7 @@ export default function DemoPage() {
                 </div>
                 <RadioGroup label={t.demo.step2.sizeLabel} options={sizes} value={size} onChange={setSize} />
                 <RadioGroup label={t.demo.step2.industryLabel} options={industries} value={industry} onChange={setIndustry} />
-                <RadioGroup label={t.demo.step2.revenueLabel} options={revenues} value={revenue} onChange={setRevenue} />
+                <RadioGroup label={t.demo.step2.serviceLabel} options={services} value={service} onChange={setService} />
                 <div className="flex gap-3">
                   <button
                     onClick={() => setStep(1)}
@@ -271,7 +290,7 @@ export default function DemoPage() {
                   </button>
                   <button
                     onClick={() => setStep(3)}
-                    disabled={!size || !industry || !revenue}
+                    disabled={!size || !industry || !service}
                     className="flex-1 py-3.5 rounded-xl font-bold text-sm text-white bg-[#2F81F7] hover:bg-[#388BFD] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                   >
                     {t.demo.continue}
@@ -299,6 +318,19 @@ export default function DemoPage() {
                   value={urgency}
                   onChange={setUrgency}
                 />
+                <div>
+                  <label htmlFor="comment" className="block text-[#8B949E] text-sm font-medium mb-2">
+                    {t.demo.step3.commentLabel}
+                  </label>
+                  <textarea
+                    id="comment"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder={t.demo.step3.commentPlaceholder}
+                    rows={3}
+                    className="w-full bg-[#21262D] border border-[#30363D] rounded-xl px-4 py-3 text-[#F0F6FC] placeholder-[#484F58] focus:outline-none focus:border-[#2F81F7] transition-colors text-sm resize-none"
+                  />
+                </div>
                 <div className="flex gap-3">
                   <button
                     onClick={() => setStep(2)}
@@ -311,7 +343,7 @@ export default function DemoPage() {
                     disabled={selectedProblems.length === 0 || !urgency}
                     className="flex-1 py-3.5 rounded-xl font-bold text-sm text-white bg-[#2F81F7] hover:bg-[#388BFD] disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-[0_0_20px_rgba(47,129,247,0.3)]"
                   >
-                    {t.demo.reserve} →
+                    {t.demo.reserve}
                   </button>
                 </div>
               </div>
@@ -320,12 +352,12 @@ export default function DemoPage() {
 
           {/* Right: info panel */}
           <div className="lg:col-span-2">
-            <div className="sticky top-24 space-y-4">
-              <div className="p-5 rounded-2xl border border-[#30363D] bg-[#161B22]">
-                <h3 className="text-[#F0F6FC] font-bold text-base mb-4">{t.demo.panel.title}</h3>
-                <ul className="space-y-3">
+            <div className="sticky top-24">
+              <div className="p-6 rounded-2xl border border-[#30363D] bg-[#161B22]">
+                <h3 className="text-[#F0F6FC] font-bold text-base mb-5">{t.demo.panel.title}</h3>
+                <ul className="space-y-3.5 mb-6">
                   {t.demo.panel.bullets.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2.5">
+                    <li key={i} className="flex items-start gap-3">
                       <div className="w-5 h-5 rounded-full bg-[#2F81F7]/10 border border-[#2F81F7]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#2F81F7" strokeWidth="2">
                           <path d="M2 5l2.5 2.5L8 3" strokeLinecap="round" strokeLinejoin="round" />
@@ -335,33 +367,8 @@ export default function DemoPage() {
                     </li>
                   ))}
                 </ul>
-              </div>
-
-              {/* Testimonial */}
-              <div className="p-5 rounded-2xl border border-[#30363D] bg-[#161B22]">
-                <div className="flex gap-1 mb-3" aria-label={t.demoExtra.starsAria}>
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <svg key={i} width="12" height="12" viewBox="0 0 12 12" fill="#D29922" aria-hidden>
-                      <path d="M6 1l1.236 2.505L10 3.91l-2 1.948.472 2.752L6 7.5 3.528 8.61 4 5.858 2 3.91l2.764-.405L6 1z" />
-                    </svg>
-                  ))}
-                </div>
-                <blockquote className="text-[#8B949E] text-sm leading-relaxed mb-3">
-                  &ldquo;{t.demo.panel.quote}&rdquo;
-                </blockquote>
-                <p className="text-[#484F58] text-xs">{t.demo.panel.author}</p>
-              </div>
-
-              {/* Guarantee */}
-              <div className="flex items-start gap-3 p-4 rounded-xl border border-[#3FB950]/20 bg-[#3FB950]/5">
-                <svg className="w-5 h-5 text-[#3FB950] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                </svg>
-                <div>
-                  <p className="text-[#3FB950] text-xs font-bold mb-0.5">{t.demo.panel.guaranteeTitle}</p>
-                  <p className="text-[#8B949E] text-xs leading-relaxed">
-                    {t.demo.panel.guaranteeBody}
-                  </p>
+                <div className="pt-5 border-t border-[#30363D]/60">
+                  <p className="text-[#484F58] text-sm leading-relaxed italic">{t.demo.panel.note}</p>
                 </div>
               </div>
             </div>

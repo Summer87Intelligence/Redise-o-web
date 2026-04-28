@@ -11,7 +11,7 @@ export default function HowItWorks() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-20">
+        <div className="text-center mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#2F81F7]/25 bg-[#2F81F7]/8 mb-6">
             <div className="w-1 h-1 rounded-full bg-[#2F81F7]" />
             <span className="text-[#2F81F7] text-xs font-semibold uppercase tracking-widest">
@@ -111,7 +111,7 @@ export default function HowItWorks() {
         {/* Bottom CTA */}
         <div className="mt-16 text-center">
           <Link
-            href="#demo"
+            href="#contacto"
             className="inline-flex items-center gap-2 px-6 py-3.5 text-base font-semibold text-white bg-[#2F81F7] hover:bg-[#388BFD] rounded-xl transition-all duration-150 shadow-[0_0_24px_rgba(47,129,247,0.3)] hover:shadow-[0_0_36px_rgba(47,129,247,0.4)]"
           >
             {t.howItWorks.cta}

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 \"C:\\\\Users\\\\Andres\\\\.claude\\\\plugins\\\\cache\\\\ui-ux-pro-max-skill\\\\ui-ux-pro-max\\\\2.5.0\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"business intelligence financial copilot SaaS B2B decision engine dark sophisticated\" --design-system -p \"Summer87\" -f markdown)",
+      "Bash(python \"C:\\\\Users\\\\Andres\\\\.claude\\\\plugins\\\\cache\\\\ui-ux-pro-max-skill\\\\ui-ux-pro-max\\\\2.5.0\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"business intelligence financial copilot SaaS B2B decision engine dark sophisticated\" --design-system -p \"Summer87\" -f markdown)",
+      "Bash(py:*)",
+      "Bash(npm run *)"
+    ]
+  }
+}

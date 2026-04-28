@@ -2,14 +2,18 @@
 
 import Link from 'next/link'
 import { useTranslation } from '@/lib/i18n/config'
+import { trackEvent } from '@/lib/analytics'
+import { motion, useReducedMotion } from 'framer-motion'
 
 export default function FinalCTA() {
-  const { t } = useTranslation()
-  const extra = t.finalCtaExtra
+  const { t, locale } = useTranslation()
+  const w = t.whatYouGet
+  const reduceMotion = useReducedMotion()
+
   return (
-    <section id="demo" className="py-24 bg-[#0A0E14] relative overflow-hidden">
+    <section id="contacto" className="py-16 sm:py-24 bg-[#0A0E14] relative overflow-hidden">
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 -z-10 pointer-events-none"
         aria-hidden
         style={{
           background:
@@ -17,7 +21,7 @@ export default function FinalCTA() {
         }}
       />
       <div
-        className="absolute inset-0 opacity-[0.015] pointer-events-none"
+        className="absolute inset-0 -z-10 opacity-[0.015] pointer-events-none"
         aria-hidden
         style={{
           backgroundImage:
@@ -26,34 +30,88 @@ export default function FinalCTA() {
         }}
       />
 
-      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Urgency banner */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#F85149]/20 bg-[#F85149]/6 mb-10">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#F85149] animate-pulse" />
-          <span className="text-[#F85149] text-xs font-bold uppercase tracking-widest">
-            {t.finalCta.urgency}
-          </span>
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <motion.h2
+          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : 0.12 }}
+          className="text-4xl sm:text-5xl font-black text-[#F0F6FC] leading-tight tracking-tight mb-4 text-balance"
+        >
+          {t.finalCta.title}
+          <motion.span
+            initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : 0.22 }}
+            className="text-transparent bg-clip-text bg-gradient-to-r from-[#2F81F7] to-[#7C3AED] ml-2"
+          >
+            {t.finalCta.titleHighlight}
+          </motion.span>
+        </motion.h2>
+
+        <motion.p
+          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: reduceMotion ? 0 : 0.48, delay: reduceMotion ? 0 : 0.16 }}
+          className="text-base sm:text-lg text-[#8B949E] leading-relaxed mb-6 max-w-2xl mx-auto"
+        >
+          {t.finalCta.description}
+        </motion.p>
+
+        <motion.h3
+          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: reduceMotion ? 0 : 0.46, delay: reduceMotion ? 0 : 0.2 }}
+          className="text-xs font-semibold uppercase tracking-widest text-[#484F58] mb-3"
+        >
+          {w.title}
+        </motion.h3>
+
+        <div className="relative mt-6 text-left">
+          <div
+            className="hidden lg:block absolute left-0 right-0 top-[26px] h-px bg-[#2F81F7]/20 pointer-events-none"
+            aria-hidden
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+          {w.items.map((item, i) => (
+            <motion.div
+              key={i}
+              initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: reduceMotion ? 0 : 0.42,
+                delay: reduceMotion ? 0 : i * 0.08,
+                ease: 'easeOut',
+              }}
+              className="relative rounded-xl border border-[#30363D]/70 bg-[#161B22]/90 px-3 py-2.5 sm:py-3 shadow-[inset_0_1px_0_rgba(240,246,252,0.04)] transition-all duration-300 ease-out hover:border-[#2F81F7]/40 hover:shadow-[0_16px_45px_rgba(47,129,247,0.10)] hover:-translate-y-[3px] group"
+            >
+              <div className="mb-2 flex items-center gap-2">
+                <span className="text-[11px] tracking-[0.16em] font-semibold text-[#8B949E] group-hover:text-[#C9D1D9] transition-colors">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span className="h-1.5 w-1.5 rounded-full bg-[#2F81F7]/60 group-hover:bg-[#58A6FF] group-hover:shadow-[0_0_10px_rgba(47,129,247,0.5)] transition-all" />
+              </div>
+              <p className="text-[13px] sm:text-sm text-[#C9D1D9] leading-snug">{item}</p>
+            </motion.div>
+          ))}
+          </div>
         </div>
 
-        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#F0F6FC] leading-tight tracking-tight mb-6 text-balance">
-          {t.finalCta.title}
-          <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2F81F7] via-[#60A5FA] to-[#818CF8]">
-            {t.finalCta.titleHighlight}
-          </span>
-        </h2>
-
-        <p className="text-xl text-[#8B949E] leading-relaxed mb-4 max-w-2xl mx-auto">
-          {t.finalCta.description}
-        </p>
-        <p className="text-base text-[#484F58] mb-12 max-w-xl mx-auto">
-          {t.finalCta.sub}
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
+        <motion.div
+          className="mt-8 flex flex-col sm:flex-row gap-3 justify-center"
+          initial={reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : 0.28 }}
+        >
           <Link
-            href="/demo"
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-bold text-white bg-[#2F81F7] hover:bg-[#388BFD] rounded-xl transition-all duration-150 shadow-[0_0_32px_rgba(47,129,247,0.4)] hover:shadow-[0_0_48px_rgba(47,129,247,0.5)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2F81F7]"
+            href={`/${locale}/demo`}
+            onClick={() => trackEvent('click_agendar_reunion', { source: 'final_cta' })}
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-bold text-white bg-[#2F81F7] hover:bg-[#388BFD] rounded-xl transition-[background-color,box-shadow,transform] duration-200 ease-out motion-safe:hover:scale-[1.02] motion-safe:active:scale-[0.98] cta-glow-pulse hover:shadow-[0_0_40px_rgba(47,129,247,0.52)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2F81F7]"
           >
             {t.finalCta.ctaPrimary}
             <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
@@ -61,49 +119,15 @@ export default function FinalCTA() {
             </svg>
           </Link>
           <Link
-            href="mailto:hola@summer87.com"
+            href="https://wa.me/59898260258"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackEvent('click_whatsapp', { source: 'final_cta' })}
             className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-bold text-[#8B949E] hover:text-[#F0F6FC] border border-[#30363D] hover:border-[#484F58] bg-[#161B22] hover:bg-[#21262D] rounded-xl transition-all duration-150"
           >
             {t.finalCta.ctaSecondary}
           </Link>
-        </div>
-
-        {/* Response time */}
-        <p className="text-[#484F58] text-sm mb-12">
-          {extra.responsePrefix}{' '}
-          <span className="text-[#F0F6FC] font-semibold">{extra.responseHighlight}</span>{' '}
-          {extra.responseSuffix}
-        </p>
-
-        {/* Trust signals */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto">
-          {extra.trust.map((item: { value: string; label: string }, i: number) => (
-            <div key={i} className="p-3 rounded-xl border border-[#30363D] bg-[#161B22]">
-              <p className="text-[#F0F6FC] font-bold text-sm">{item.value}</p>
-              <p className="text-[#484F58] text-xs mt-0.5">{item.label}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Testimonial inline */}
-        <div className="mt-12 max-w-xl mx-auto p-5 rounded-2xl border border-[#30363D] bg-[#161B22] text-left">
-          <div className="flex gap-1 mb-3" aria-label={extra.starsAria}>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <svg key={i} width="13" height="13" viewBox="0 0 13 13" fill="#D29922" aria-hidden>
-                <path d="M6.5 1l1.545 3.13 3.455.502-2.5 2.436.59 3.44L6.5 8.875l-3.09 1.633.59-3.44L1.5 4.632l3.455-.502L6.5 1z" />
-              </svg>
-            ))}
-          </div>
-          <blockquote className="text-[#8B949E] text-sm leading-relaxed mb-3">
-            &ldquo;{extra.quote}&rdquo;
-          </blockquote>
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#2F81F7] to-[#1D4ED8] flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
-              M
-            </div>
-            <p className="text-[#484F58] text-xs">{extra.author}</p>
-          </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   )

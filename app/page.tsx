@@ -1,6 +1,5 @@
-import { redirect } from 'next/navigation'
-import { DEFAULT_LOCALE } from '@/lib/i18n/shared'
+import { redirect } from "next/navigation";
 
-export default function HomePageRedirect() {
-  redirect(`/${DEFAULT_LOCALE}`)
+export default function RootPage() {
+  redirect("/es");
 }

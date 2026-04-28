@@ -7,9 +7,9 @@ type Props = { params: { locale: string } }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locale = isLocale(params.locale) ? params.locale : DEFAULT_LOCALE
   const titleMap = {
-    es: 'Reservar demo',
-    en: 'Book a demo',
-    de: 'Demo buchen',
+    es: 'Agendar una reunión',
+    en: 'Schedule a meeting',
+    de: 'Termin vereinbaren',
   } as const
   return {
     title: titleMap[locale],

@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useTranslation } from '@/lib/i18n/config'
 
 export default function Footer() {
@@ -8,15 +9,15 @@ export default function Footer() {
   const footerLinks = {
     [t.footer.links.producto]: [
       { label: t.footer.links.comoFunciona, href: '#como-funciona' },
-      { label: t.footer.links.copilot, href: '#producto' },
+      { label: t.footer.links.pricing, href: '#servicios' },
+      { label: t.footer.links.copilot, href: '#servicios' },
       { label: t.footer.links.integrations, href: '#integraciones' },
-      { label: t.footer.links.pricing, href: '#pricing' },
     ],
     [t.footer.links.empresa]: [
       { label: t.footer.links.casos, href: '#casos-de-uso' },
       { label: t.footer.links.blog, href: '/blog' },
       { label: t.footer.links.faq, href: '#faq' },
-      { label: t.footer.links.contacto, href: '/contacto' },
+      { label: t.footer.links.contacto, href: '#contacto' },
     ],
     [t.footer.links.legal]: [
       { label: t.footer.links.privacidad, href: '/legal/privacidad' },
@@ -30,15 +31,15 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-12">
           {/* Brand */}
           <div className="md:col-span-2">
-            <Link href={`/${locale}`} className="flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-[#2F81F7] flex items-center justify-center">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path
-                    d="M8 2L10.5 6.5H13.5L11 9.5L12 13.5L8 11L4 13.5L5 9.5L2.5 6.5H5.5L8 2Z"
-                    fill="white"
-                    fillOpacity="0.95"
-                  />
-                </svg>
+            <Link href={`/${locale}`} className="flex items-center gap-3 mb-4">
+              <div className="p-1.5 rounded-lg bg-white/[0.03] border border-white/10">
+                <Image
+                  src="/summer87-logo.png"
+                  alt="Summer87"
+                  width={34}
+                  height={34}
+                  className="h-9 w-9 sm:h-10 sm:w-10 rounded-md object-cover"
+                />
               </div>
               <span className="font-bold text-[#F0F6FC] text-lg tracking-tight">Summer87</span>
             </Link>

@@ -51,7 +51,7 @@ type IntentContent = {
     riskLabel: string
     actionLabel: string
     inputCompanySize: string
-    inputMonthlyRevenue: string
+  inputRevenueRange: string
   linkHome: string
   linkDemo: string
   linkPricing: string
@@ -79,10 +79,10 @@ const EN_UI = {
   riskLabel: 'Risk',
   actionLabel: 'Action now',
   inputCompanySize: 'Company size',
-  inputMonthlyRevenue: 'Monthly revenue',
+  inputRevenueRange: 'Revenue range',
   linkHome: 'Home',
   linkDemo: 'Book demo',
-  linkPricing: 'Pricing',
+  linkPricing: 'Services',
   linkFaq: 'FAQ',
   linkHowItWorks: 'How it works',
 }
@@ -106,10 +106,10 @@ const ES_UI = {
   riskLabel: 'Riesgo',
   actionLabel: 'Acción ahora',
   inputCompanySize: 'Tamaño de empresa',
-  inputMonthlyRevenue: 'Facturación mensual',
+  inputRevenueRange: 'Rango de facturación',
   linkHome: 'Inicio',
   linkDemo: 'Reservar demo',
-  linkPricing: 'Pricing',
+  linkPricing: 'Servicios',
   linkFaq: 'FAQ',
   linkHowItWorks: 'Cómo funciona',
 }
@@ -133,10 +133,10 @@ const DE_UI = {
   riskLabel: 'Risiko',
   actionLabel: 'Aktion jetzt',
   inputCompanySize: 'Unternehmensgröße',
-  inputMonthlyRevenue: 'Monatsumsatz',
+  inputRevenueRange: 'Umsatzspanne',
   linkHome: 'Start',
   linkDemo: 'Demo buchen',
-  linkPricing: 'Preise',
+  linkPricing: 'Leistungen',
   linkFaq: 'FAQ',
   linkHowItWorks: 'So funktioniert es',
 }
@@ -157,12 +157,12 @@ export const intentPageContent: Record<Locale, Record<IntentSlug, IntentContent>
       whenToUse: ['You review performance after month-end.', 'Margin variation is hard to explain.', 'Teams need aligned priorities.'],
       forWho: ['Founders and CEOs.', 'Finance and RevOps.', 'Operators responsible for execution.'],
       examples: ['Improve payback after CAC variation.', 'Detect retention patterns earlier.', 'Support runway planning with weekly reviews.'],
-      commonMistakes: ['Tracking too many KPIs.', 'Monthly-only review cadence.', 'Confusing activity with economics.'],
+      commonMistakes: ['Tracking too many KPIs.', 'Review cadence that is too infrequent.', 'Confusing activity with economics.'],
       ignoreConsequences: ['Visibility remains limited.', 'Planning becomes less predictable.', 'Decisions become more reactive.'],
       fixes: ['Weekly decision loop.', 'Owner per action.', 'Measure outcome, not only reporting.'],
       faqs: [
         { question: 'Why can business data be difficult to interpret?', answer: 'Because many tools show events without connecting them to decision context.' },
-        { question: 'Why are deviations often detected later than expected?', answer: 'Because many risks evolve weekly while reporting is reviewed monthly.' },
+        { question: 'Why are deviations often detected later than expected?', answer: 'Because many risks evolve weekly while reporting is reviewed too late.' },
         { question: 'Is this just another dashboard?', answer: 'No. It helps prioritize actions in addition to showing outcomes.' },
       ],
       cta: {
@@ -192,7 +192,7 @@ export const intentPageContent: Record<Locale, Record<IntentSlug, IntentContent>
       fixes: ['Weekly runway thresholds.', 'Payback-based allocation.', 'Collection discipline.'],
       faqs: [
         { question: "Why don't I understand cash pressure?", answer: 'Because P&L and cash timing diverge.' },
-        { question: 'Why do I detect cash risk too late?', answer: 'Because monthly reporting misses weekly deterioration.' },
+        { question: 'Why do I detect cash risk too late?', answer: 'Because delayed reporting misses weekly deterioration.' },
         { question: 'Is this different from a dashboard?', answer: 'Yes. It explains causes and next moves.' },
       ],
       cta: {
@@ -215,7 +215,7 @@ export const intentPageContent: Record<Locale, Record<IntentSlug, IntentContent>
       whatIs: 'A decision layer that converts metrics into ranked actions with expected economic impact.',
       howItWorks: ['Unify signals across teams.', 'Explain cause and urgency.', 'Rank actions by impact.'],
       whenToUse: ['Dashboard says what happened, not what to do.', 'Teams are misaligned.', 'Execution is too slow.'],
-      forWho: ['Executive teams.', 'Finance + RevOps.', 'Growth operators.'],
+      forWho: ['Executive teams.', 'Finance + RevOps.', 'Operations operators.'],
       examples: ['Prioritize retention over acquisition.', 'Reallocate budget to protect contribution margin.'],
       commonMistakes: ['Buying more BI for a prioritization problem.', 'No owner per action.', 'Analysis loops too long.'],
       ignoreConsequences: ['Slower execution.', 'Conflicting priorities.', 'Lower decision consistency.'],
@@ -247,7 +247,7 @@ export const intentPageContent: Record<Locale, Record<IntentSlug, IntentContent>
       whenToUse: ['Meetings end without clear actions.', 'Reports arrive later than needed.', 'Local KPIs hide broader trends.'],
       forWho: ['Founders.', 'CFOs.', 'Operations teams.'],
       examples: ['80 KPIs and still no priority.', 'Clicks up, payback down.'],
-      commonMistakes: ['More dashboards, same decisions.', 'Monthly control for weekly risks.', 'No action ownership.'],
+      commonMistakes: ['More dashboards, same decisions.', 'Late control for weekly risks.', 'No action ownership.'],
       ignoreConsequences: ['Delayed reaction.', 'Gradual margin pressure.', 'More reactive strategy cycles.'],
       fixes: ['One economic priority model.', 'Weekly risk review.', 'Outcome-first execution tracking.'],
       faqs: [
@@ -280,12 +280,12 @@ export const intentPageContent: Record<Locale, Record<IntentSlug, IntentContent>
       whenToUse: ['Decisiones tardías.', 'Margen inestable.', 'Ruido de métricas.'],
       forWho: ['Founders y CEOs.', 'Finanzas y RevOps.', 'Equipos de operaciones.'],
       examples: ['Recuperar payback tras suba de CAC.', 'Frenar fuga de churn.', 'Proteger runway.'],
-      commonMistakes: ['Demasiados KPIs sin orden.', 'Revisión mensual.', 'Confundir actividad con salud económica.'],
+      commonMistakes: ['Demasiados KPIs sin orden.', 'Revisión tardía.', 'Confundir actividad con salud económica.'],
       ignoreConsequences: ['Se mantiene baja visibilidad.', 'La planificación pierde previsibilidad.', 'La estrategia se vuelve más reactiva.'],
       fixes: ['Cadencia semanal.', 'Dueño por acción.', 'Medir resultado, no solo reporte.'],
       faqs: [
         { question: '¿Por qué puede resultar difícil interpretar los datos?', answer: 'Porque muchas herramientas muestran eventos sin contexto para decidir.' },
-        { question: '¿Por qué los desvíos suelen detectarse tarde?', answer: 'Porque los riesgos cambian semanalmente y muchas revisiones son mensuales.' },
+        { question: '¿Por qué los desvíos suelen detectarse tarde?', answer: 'Porque los riesgos cambian semanalmente y muchas revisiones llegan tarde.' },
         { question: '¿Esto es solo otro dashboard?', answer: 'No. También ayuda a priorizar acciones.' },
       ],
       cta: {
@@ -315,7 +315,7 @@ export const intentPageContent: Record<Locale, Record<IntentSlug, IntentContent>
       fixes: ['Umbrales semanales.', 'Asignación por payback.', 'Disciplina de cobranzas.'],
       faqs: [
         { question: '¿Por qué no entiendo la presión de caja?', answer: 'Porque P&L y caja no se mueven igual en el tiempo.' },
-        { question: '¿Por qué detecto tarde el riesgo?', answer: 'Porque el deterioro es semanal y la revisión mensual.' },
+        { question: '¿Por qué detecto tarde el riesgo?', answer: 'Porque el deterioro es semanal y la revisión llega tarde.' },
         { question: '¿Esto es distinto de un dashboard?', answer: 'Sí. Explica causa y próxima acción.' },
       ],
       cta: {
@@ -370,7 +370,7 @@ export const intentPageContent: Record<Locale, Record<IntentSlug, IntentContent>
       whenToUse: ['Reuniones sin acción.', 'Reportes siempre tarde.', 'KPIs locales vs resultado global.'],
       forWho: ['Founders.', 'CFOs.', 'Operaciones.'],
       examples: ['80 KPIs sin foco.', 'Clicks suben y payback empeora.'],
-      commonMistakes: ['Más dashboards, mismas decisiones.', 'Control mensual para riesgo semanal.', 'Sin responsables claros.'],
+      commonMistakes: ['Más dashboards, mismas decisiones.', 'Control tardío para riesgo semanal.', 'Sin responsables claros.'],
       ignoreConsequences: ['Reacción más lenta.', 'Presión gradual sobre márgenes.', 'Ciclos de decisión reactivos.'],
       fixes: ['Marco económico único.', 'Review semanal de riesgo.', 'Seguimiento por resultado.'],
       faqs: [
@@ -460,7 +460,7 @@ export const intentPageContent: Record<Locale, Record<IntentSlug, IntentContent>
       whatIs: 'Eine Decision-Layer, die Kennzahlen in priorisierte Maßnahmen mit wirtschaftlichem Effekt übersetzt.',
       howItWorks: ['Signale teamübergreifend vereinheitlichen.', 'Ursache + Dringlichkeit erklären.', 'Aktionen nach Impact ranken.'],
       whenToUse: ['Dashboard ohne nächsten Schritt.', 'Prioritätenkonflikte.', 'Langsame Ausführung.'],
-      forWho: ['Executive Teams.', 'Finance + RevOps.', 'Growth Operations.'],
+      forWho: ['Executive Teams.', 'Finance + RevOps.', 'Operations teams.'],
       examples: ['Retention vor Acquisition priorisieren.', 'Budget für Marge reallokieren.'],
       commonMistakes: ['Mehr BI statt Priorisierungslogik.', 'Kein Owner je Maßnahme.', 'Zu lange Analysezyklen.'],
       ignoreConsequences: ['Langsame Ausführung.', 'Widersprüchliche Entscheidungen.', 'Kumulierte Verluste.'],
